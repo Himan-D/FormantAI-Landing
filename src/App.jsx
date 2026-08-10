@@ -1,108 +1,85 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import './index.css'
 
 function App() {
-  const [typedText, setTypedText] = useState("");
-  const terminalText = `> Initializing FormantSOTAEngine...
-> Loading WavLM weights... [OK]
-> Fusing Late-Fusion Heads... [OK]
-> Analyzing: apple_tts_clone.wav
-> SYNTHETIC PROBABILITY: 99.8%
-> Emotion: NEUTRAL
-> Threat Level: CRITICAL`;
-
-  useEffect(() => {
-    let currentText = "";
-    let i = 0;
-    
-    const typeWriter = () => {
-      if (i < terminalText.length) {
-        currentText += terminalText.charAt(i);
-        setTypedText(currentText);
-        i++;
-        setTimeout(typeWriter, Math.random() * 15 + 10);
-      }
-    };
-    
-    setTimeout(typeWriter, 500);
-
-    const handleMouseMove = (e) => {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-      const grid = document.querySelector('.grid-bg');
-      if(grid) {
-        grid.style.transform = `translate(-${x * 20}px, -${y * 20}px)`;
-      }
-    };
-    
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  const marqueeText = " // SOTA DEEPFAKE DETECTION // NEURAL ENSEMBLE // ZERO SINGLE POINT OF FAILURE // EDGE OPTIMIZED // SOTA DEEPFAKE DETECTION // NEURAL ENSEMBLE // ZERO SINGLE POINT OF FAILURE // EDGE OPTIMIZED ";
 
   return (
     <>
-      <div className="grid-bg"></div>
-      
-      <nav className="navbar">
-        <div className="logo">FORMANT_AI<span className="cursor">_</span></div>
-        <div className="nav-links">
+      <nav className="nav-header">
+        <div style={{ width: '1.5rem' }}></div>
+        <div style={{ background: 'var(--color-primary-surface-contrast)' }}></div>
+        <div className="nav-logo-container">
+          <a href="/" className="nav-logo">Formant_AI</a>
+        </div>
+        <div style={{ background: 'var(--color-primary-surface-contrast)' }}></div>
+        <div className="nav-menu">
           <a href="#architecture" className="nav-link">Architecture</a>
-          <a href="#models" className="nav-link">Models</a>
-          <a href="#enterprise" className="btn-primary">Enterprise Deploy</a>
+          <a href="#engine" className="nav-link">Engine</a>
+          <a href="#deploy" className="btn-primary" style={{ height: '2.5rem', padding: '0 1rem', fontSize: '0.75rem' }}>Deploy</a>
         </div>
       </nav>
 
       <main>
-        <section className="hero">
-          <div className="hero-content">
-            <div className="tagline">[ SOTA DEEPFAKE DETECTION ]</div>
-            <h1 className="hero-title">RADICALLY<br/>SECURING<br/>AUDIO.</h1>
-            <p className="hero-subtitle">Open-source models are brittle. We built a native WavLM Late-Fusion architecture that maps the physical constraints of the human vocal tract. Formant AI detects what traditional algorithms miss.</p>
-            <div className="cta-group">
-              <a href="#" className="btn-primary large">Read the Docs</a>
-              <a href="#" className="btn-secondary large">View GitHub</a>
+        <section className="hero-container">
+          <div className="hero-left">
+            <h1 className="hero-title">
+              Building<br/>Truth<br/>in Audio
+            </h1>
+            <p className="hero-subtitle">
+              Open-source models are brittle. We built a native WavLM Late-Fusion architecture that maps the physical constraints of the human vocal tract.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <a href="#docs" className="btn-secondary">Read Docs</a>
+              <a href="#github" className="btn-secondary" style={{ background: 'var(--color-primary-surface)', color: 'var(--color-primary-surface-contrast)' }}>GitHub</a>
             </div>
           </div>
-          <div className="hero-visual">
-            <div className="terminal-window">
-              <div className="terminal-header">
-                <span className="dot red"></span>
-                <span className="dot yellow"></span>
-                <span className="dot green"></span>
-                <span className="title">orchestrator@formant: ~</span>
-              </div>
-              <div className="terminal-body">
-                {typedText.split('\n').map((line, idx) => {
-                  if (line.includes('99.8%')) {
-                    return <div key={idx} className="highlight-red">{line}</div>;
-                  }
-                  return <div key={idx}>{line}</div>;
-                })}
-              </div>
+          <div className="hero-right">
+            <div className="typing-list">
+              <div>orchestrator@formant: ~</div>
+              <div>initializing FormantSOTAEngine...</div>
+              <div>loading WavLM weights... [ok]</div>
+              <div>fusing late-fusion heads... [ok]</div>
+              <div>analyzing: apple_tts_clone.wav</div>
+              <div style={{ color: 'var(--color-primary-accent)', fontWeight: 'bold' }}>synthetic probability: 99.8%</div>
+              <div>emotion: neutral</div>
+              <div>threat level: critical</div>
             </div>
           </div>
         </section>
 
-        <section id="architecture" className="bento-grid">
-          <div className="bento-item wide">
-            <h3>01 // THE SOTA ARCHITECTURE</h3>
-            <p>We abandoned naive Model-Level Ensembles. Formant AI utilizes a Feature-Level Neural Ensemble driven by a shared WavLM backbone. Lightning fast. Zero single points of failure.</p>
+        <div className="marquee-container">
+          <div className="marquee-content">
+            {marqueeText}
           </div>
-          <div className="bento-item">
-            <h3>02 // EDGE DEPLOY</h3>
-            <p>Distilled to 380MB. Runs natively on your edge infrastructure with complete privacy.</p>
+        </div>
+
+        <section id="architecture" className="feature-grid">
+          <div className="feature-box">
+            <h3 className="feature-title">01 // The Architecture</h3>
+            <p className="feature-desc">
+              We abandoned naive Model-Level Ensembles. Formant AI utilizes a Feature-Level Neural Ensemble driven by a shared WavLM backbone. Lightning fast.
+            </p>
           </div>
-          <div className="bento-item">
-            <h3>03 // <span className="highlight-green">SUB 2-SEC LATENCY</span></h3>
-            <p>Real-time stream analysis optimized for telephony and VoIP protocols.</p>
+          <div className="feature-box">
+            <h3 className="feature-title">02 // Edge Deploy</h3>
+            <p className="feature-desc">
+              Distilled to 380MB. Runs natively on your edge infrastructure with complete privacy. No bloated API calls needed.
+            </p>
+          </div>
+          <div className="feature-box" style={{ borderRight: 'none' }}>
+            <h3 className="feature-title">03 // Low Latency</h3>
+            <p className="feature-desc">
+              Sub 2-second real-time stream analysis optimized for telephony and VoIP protocols.
+            </p>
           </div>
         </section>
       </main>
 
-      <footer>
-        <div className="footer-content">
-          <div className="footer-logo">FORMANT_AI</div>
-          <div className="footer-copyright">© 2026 Formant AI, Inc. Built for Enterprise.</div>
+      <footer style={{ padding: '3rem', display: 'flex', justifyContent: 'space-between', borderTop: '0.0625rem solid var(--color-primary-surface-contrast)' }}>
+        <div className="nav-logo">FORMANT_AI</div>
+        <div style={{ fontSize: '0.875rem', color: 'var(--neutral-dark-grey)' }}>
+          © 2026 Formant AI, Inc. Built for Enterprise.
         </div>
       </footer>
     </>
