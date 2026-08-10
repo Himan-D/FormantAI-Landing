@@ -1,83 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formant AI - Unbreakable Audio Intelligence</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Modern Monospace & Sans-Serif Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Background Grid -->
-    <div class="grid-bg"></div>
-    
-    <nav class="navbar">
-        <div class="logo">FORMANT_AI<span class="cursor">_</span></div>
-        <div class="nav-links">
-            <a href="#architecture" class="nav-link">Architecture</a>
-            <a href="#models" class="nav-link">Models</a>
-            <a href="#enterprise" class="btn-primary">Enterprise Deploy</a>
-        </div>
-    </nav>
-
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <div class="tagline">[ SOTA DEEPFAKE DETECTION ]</div>
-                <h1 class="hero-title">RADICALLY<br>SECURING<br>AUDIO.</h1>
-                <p class="hero-subtitle">Open-source models are brittle. We built a native WavLM Late-Fusion architecture that maps the physical constraints of the human vocal tract. Formant AI detects what traditional algorithms miss.</p>
-                <div class="cta-group">
-                    <a href="#" class="btn-primary large">Read the Docs</a>
-                    <a href="#" class="btn-secondary large">View GitHub</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="terminal-window">
-                    <div class="terminal-header">
-                        <span class="dot red"></span>
-                        <span class="dot yellow"></span>
-                        <span class="dot green"></span>
-                        <span class="title">orchestrator@formant: ~</span>
-                    </div>
-                    <div class="terminal-body" id="terminal-text">
-                        > Initializing FormantSOTAEngine...<br>
-                        > Loading WavLM weights... [OK]<br>
-                        > Fusing Late-Fusion Heads... [OK]<br>
-                        > Analyzing: apple_tts_clone.wav<br>
-                        <span class="highlight-red">> SYNTHETIC PROBABILITY: 99.8%</span><br>
-                        > Emotion: NEUTRAL<br>
-                        > Threat Level: CRITICAL
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="architecture" class="bento-grid">
-            <div class="bento-item wide">
-                <h3>01 // THE SOTA ARCHITECTURE</h3>
-                <p>We abandoned naive Model-Level Ensembles. Formant AI utilizes a Feature-Level Neural Ensemble driven by a shared WavLM backbone. Lightning fast. Zero single points of failure.</p>
-            </div>
-            <div class="bento-item">
-                <h3>02 // EDGE DEPLOY</h3>
-                <p>Distilled to 380MB. Runs natively on your edge infrastructure with complete privacy.</p>
-            </div>
-            <div class="bento-item">
-                <h3>03 // <span class="highlight-green">SUB 2-SEC LATENCY</span></h3>
-                <p>Real-time stream analysis optimized for telephony and VoIP protocols.</p>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">FORMANT_AI</div>
-            <div class="footer-copyright">© 2026 Formant AI, Inc. Built for Enterprise.</div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>formantai-landing</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
