@@ -1,0 +1,29 @@
+# LLMs excel at theory of mind because they read
+
+How LLMs develop theory-of-mind abilities by training on narrative-rich text where humans constantly reason about other humans' mental states.
+
+Date: 2024-02-20
+URL: .
+Tags: notes, ml, philosophy, cogsci
+
+---
+
+Large language models are simulators. In predicting the next likely token, they are simulating how an abstracted “any person” might continue the generation. The basis for this simulation is the aggregate compression of a massive corpus of human generated natural language from the internet. So, predicting humans is literally their core function.
+In that corpus is our literature, our philosophy, our social media, our hard and social science--the knowledge graph of humanity, both in terms of discrete facts and messy human interaction. That last bit is important. The latent space of an LLM&#039;s pretraining is in large part a narrative space. Narration chock full of humans reasoning about other humans--predicting what they will do next, what they might be thinking, how they might be feeling.
+That&#039;s no surprise; we&#039;re a social species with robust social cognition. It&#039;s also no surprise1 that grokking that interpersonal narrative space in its entirety would make LLMs adept at generation resembling social cognition too.2
+We know that in humans, we can strongly correlate reading with improved theory of mind abilities. When your neural network is consistently exposed to content about how other people think, feel, desire, believe, prefer, those mental tasks are reinforced. The more experience you have with a set of ideas or states, the more adept you become.
+The experience of such natural language narration is itself a simulation where you practice and hone your theory of mind abilities. Even if, say, your English or Psychology teacher was foisting the text on you with other training intentions. Or even if you ran the simulation without coercion to escape at the beach.
+It&#039;s not such a stretch to imagine that in optimizing for other tasks LLMs acquire emergent abilities not intentionally trained.3 It may even be that in order to learn natural language prediction, these systems need theory of mind abilities or that learning language specifically involves them--that&#039;s certainly the case with human wetware systems and theory of mind skills do seem to improve with model size and language generation efficacy.
+Footnotes
+
+
+Kosinski includes a compelling treatment of much of this in &quot;Evaluating Large Language Models in Theory of Mind Tasks&quot; ↩
+
+
+It also leads to other wacky phenomena like the Waluigi effect ↩
+
+
+Here&#039;s Chalmers making a very similar point ↩
+
+
+

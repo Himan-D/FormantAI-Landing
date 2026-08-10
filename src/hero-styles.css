@@ -1,0 +1,29 @@
+.gzSOMB, .idusjh, .krgApA, .fbyDOU {
+  position: relative; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); aspect-ratio: 1 / 1; width: var(--cell-size); height: var(--cell-size);
+}
+.gzSOMB *, .idusjh *, .krgApA *, .fbyDOU * { z-index: 0; }
+.gzSOMB::before, .idusjh::before, .krgApA::before, .fbyDOU::before {
+  content: attr(data-character); position: absolute; inset: 0px; display: flex; align-items: center; justify-content: center; color: var(--color-primary-surface-contrast); font-family: var(--font-family-departure-mono); font-size: calc(var(--cell-size) * 13 / 14); line-height: 1; background-color: var(--color-primary-surface); opacity: 0; animation-duration: 3s; animation-fill-mode: both; animation-iteration-count: infinite; z-index: 1;
+}
+.gzSOMB::after, .idusjh::after, .krgApA::after, .fbyDOU::after {
+  content: ""; position: absolute; inset: 0px; background: var(--illos-statement-flash); opacity: 0; animation-duration: 3s; animation-fill-mode: both; animation-iteration-count: infinite; z-index: 2;
+}
+.jtXFYu, .krgwjD, .lvEXq, .hXgqye, .grhrvC {
+  position: relative; display: block; aspect-ratio: 1 / 1; color: var(--color-primary-surface-contrast); font-family: var(--font-family-roboto-mono); font-size: calc(var(--cell-size) * 9 / 35); font-weight: 200; line-height: 1;
+}
+.jtXFYu::before, .krgwjD::before, .lvEXq::before, .hXgqye::before, .grhrvC::before {
+  content: attr(data-character); position: absolute; top: var(--top); left: var(--left); opacity: 0; animation-duration: var(--animation-duration); animation-fill-mode: both; animation-iteration-count: infinite; transform: translate(-50%, -50%); z-index: 0;
+}
+
+.gzSOMB::before { animation-name: idlgv; }
+.gzSOMB::after { animation-name: eZiPyH; }
+.idusjh::before { animation-name: bkpXzz; }
+.idusjh::after { animation-name: bfeMXZ; }
+.krgApA::before { animation-name: kDzfcq; }
+.krgApA::after { animation-name: cnguUy; }
+.fbyDOU::before { animation-name: cyjAgX; }
+.fbyDOU::after { animation-name: dqoWGn; }
+.jtXFYu::before { animation-name: jhLUTG; }
+.krgwjD::before { animation-name: ekjqUU; }
+.lvEXq::before { animation-name: ejJGxZ; }
+.grhrvC::before { animation-name: kyImLn; }

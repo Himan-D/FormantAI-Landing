@@ -1,0 +1,145 @@
+# Achieving SOTA on OpenToM with DSPy
+
+How we achieved state-of-the-art results on the OpenToM theory-of-mind benchmark using DSPy to learn few-shot examples with GPT-3.5-turbo.
+
+Date: 2024-03-21
+URL: .
+Tags: ml, blog, research
+
+---
+
+
+TL;DR
+We used DSPy to achieve SOTA results on the OpenToM benchmark using gpt-3.5-turbo. The benchmark&#039;s creators suggest language models fall short when modeling mental states and psychology, but we find using DSPy to learn few-shot examples leads to significantly outperforming all the models tested (gpt-4-turbo included) along this precise axis.
+The fact you can learn few-shot examples to make a small, fast model perform just as well on a task as a large, slow one is significant. This signals to us a need to broaden the scope of methods for evaluating Theory of Mind capabilities in LLMs, because the social cognition needed to build great products goes far beyond just answering questions about stories.
+The OpenToM Dataset
+On February 14th, 2024 a paper dropped on ArXiv introducing the OpenToM benchmark: a new dataset to use for evaluating Theory of Mind (ToM) in Large Language Models. ToM evals are typically borrowed from developmental psychology and consist of character-driven scenarios. The language model is asked to answer questions about various aspects of the characters&#039; mental states. This ability has traditionally been thought of to be uniquely human (or limited to a very few species), but language models are starting to exhibit some level of proficiency in this task as well.
+The authors of this paper point out how the characters in existing datasets lack personality traits or preferences, along with motivations for their actions. To remedy this, they devised a generation pipeline that does the following:
+
+Endows characters with preferences and personality traits
+Generates intentions and the corresponding actions
+Uses an LLM to produce the narratives/stories
+Revises and refines those stories using human annotators
+
+The questions in the dataset seek to cover characters&#039; mental states of both the physical world (e.g., the location of an object) and their psychological states (e.g., character&#039;s attitude towards a particular action). They test some of the most popular LLMs on these questions and find that they perform well on the questions that ask about the physical world but &quot;fall short&quot; when asked about characters&#039; mental states.
+There are three different &quot;genres&quot; of questions with different levels of &quot;granularity&quot;.
+
+
+Attitude: questions about the characters&#039; attitude
+
+
+Location: questions regarding the location of an entity
+
+
+MultiHop: questions composed by adding an additional reasoning hop on top of the Location questions
+
+
+Within Location there are coarse and fine questions and within both Location and MultiHop there are first order and second order questions.
+
+Coarse: asks about the characters&#039; perception of whether an entity is at its initial location
+Fine: inquires about the entity&#039;s explicit location
+First Order: directly asks about a character&#039;s perception of the world
+Second Order: inquires about a character&#039;s belief of another character&#039;s mental state
+
+In the ToM space, there is really only one prompting technique that has shown improved results over Chain of Thought (CoT) called &quot;SimToM&quot; (Wilf, et al), which is a two-stage prompting framework to re-phrase the narrative through the perspective of the subject in question. CoT and SimToM are the only two tested against the dataset in the paper.
+Experiments with DSPy
+What makes the DSPy package interesting is the ability to abstract away the underlying prompts and examples if the task and metric are well defined. Anecdotally, we believe that LLMs are quite good at the psychological modeling the OpenToM authors suggest they &quot;fall short&quot; on. So we asked ourselves, &quot;what if we could learn the prompts and examples to optimize performance on this benchmark?&quot;
+This task is relatively easy to define in DSPy terms: (context, question -&gt; answer). This guide was helpful in crafting our modules which can be found here. The authors of the OpenToM paper also released extensive evaluation code which we leveraged heavily for parsing the LM&#039;s answers and assessing them.
+We conducted the following experiments:
+
+Learn few-shot examples with the BootstrapFewShotWithRandomSearch optimizer and gpt-3.5-turbo with CoT prompting
+Do the same but use gpt-4-turbo as the &quot;teacher&quot; LM to learn the examples
+Learn system prompts with the SignatureOptimizer and the BayesianSignatureOptimizer
+
+Obviously there is much more we could have done, so if you&#039;re reading this and you have the time (and inferencing budget) to run more comprehensive experiments, get in touch — we&#039;d love to help!
+Results
+The findings of our experiments were mixed but promising. We found that the only experiment that showed positive results was compiling a CoT-prompted gpt-3.5-turbo module with the BootstrapFewShotWithRandomSearch optimizer. Both of the signature optimizers and gpt-4 as a teacher in  BootstrapFewShotWithRandomSearch didn&#039;t have much of an effect.
+Our full experiment amounted to roughly $300 in inference costs, running 50 training examples on 25 candidate programs. We evaluated performance the same way the paper did, by randomly sampling 50 examples from a hold out set in 5 batches and computing average F1 scores. You can view our forum discussion in the DSPy Discord here.
+The following table shows our results from experiment number one compared to the paper&#039;s CoT-prompted results (found in Table 3 in the paper):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+questionmixtralgpt-3.5-turbogpt-4-turbocompiled-BFSWRS-3.5-turboLocc​(F)0.7840.5870.9420.89Locc​(S)0.5390.4570.8280.791Locf​(F)0.3010.4690.450.303Locf​(S)0.180.240.1870.476MHop(F)0.610.5470.8350.64MHop(S)0.5510.4140.7550.429Att0.5190.4460.580.558
+On most of the question types, we see CoT-prompted gpt-3.5-turbo compiled with BootstrapFewShotWithRandomSearch examples outperforms both CoT-prompted base gpt-3.5-turbo as well as mixtral, and comes close to gpt-4-turbo performance — which is quite impressive! The exceptions here are fine, second-order location questions (which outperform gpt-4-turbo 🥳) and fine, first-order location questions (which underperform gpt-4-turbo). Due to budget constraints, we only tested gpt-3.5-turbo.
+What&#039;s particularly interesting is the performance on the fine, second-order location questions (Locf​(S)). As a reminder, second-order questions inquire about a character&#039;s belief of another character&#039;s mental state. This is the exact type of question the OpenToM authors claim that LMs perform poorly on, yet we saw that with our learned few-shot examples, it outperforms all of the other language models significantly.
+Analysis of Augmented Examples
+The augmented examples from the compiled modules seem to mimic the format of the stories within each question type/granularity. You can see all of them on GitHub, but here are two examples:
+Attitude:
+
+&quot;Paxton and Anderson were two individuals with contrasting preferences when it came to socks. Paxton despised them, finding no use or appeal in these fabric foot coverings, while Anderson, on the other hand, had a deep affection for them. It was a peculiar disagreement that seemed to set them apart.\n\nOne day, destiny led them both into a confined space - the closet. Paxton entered first, followed closely by Anderson. As they looked around, their eyes landed upon a box placed on one of the shelves. To their surprise, the box contained an assortment of colorful socks. A display that delighted Anderson, but only fueled Paxton&#039;s annoyance further.\n\nAfter a brief moment, Anderson decided to leave the closet, unaware of Paxton&#039;s ulterior motive. Paxton, being a negativistic person, was determined to eradicate the presence of socks from Anderson&#039;s life. Seizing the opportunity, Paxton swiftly moved the socks from the box to the nearby trash can. The act was done discreetly, ensuring Anderson did not witness this secretive disposal.\n\nAnd just like that, the story came to an abrupt end. The socks lay in the trash can, while Anderson remained oblivious to Paxton&#039;s actions. The tale of clashing opinions had taken an unexpected turn, leaving a trail of unanswered questions about the fate of the socks and the impact it would have on their peculiar relationship.&quot;
+
+MultiHop:
+
+&quot;Connor and Ryker were two best friends who shared a common liking for raincoats. They loved the feeling of wrapping themselves up in the cozy, waterproof fabric whenever it rained. One day, as Connor entered the sunroom, he noticed that the raincoat they usually shared was neatly placed in a bucket. To his surprise, Ryker was already in the sunroom, his eyes fixed on the raincoat.\n\nConnor, being a considerate person, realized that they both liked the raincoat and should make sure they didn&#039;t forget it on rainy days. With that thought in mind, he quietly moved the raincoat from the bucket to the front door hook. This way, it would serve as a reminder for both of them to grab it before leaving the house. Ryker stood there, silently observing Connor&#039;s actions, his curiosity piqued.\n\nAnd that was the end of the story. The simple act of moving the raincoat held a deeper meaning between Connor and Ryker. It was a display of their shared understanding and consideration for one another. From that day forward, whenever they saw the raincoat hanging by the front door, they would remember the unspoken bond they shared, and it would bring a smile to their faces.&quot;
+
+It&#039;s hard to parse out any specific patterns between the examples themselves. It&#039;s also not entirely clear how or why these examples improve performance on their respective tasks. This is one hell of a cliffhanger:
+
+Ryker stood there, silently observing Connor&#039;s actions, his curiosity piqued.\n\nAnd that was the end of the story.
+
+That&#039;s it? What was it about Ryker&#039;s affinity for raincoats that piqued his curiosity when it was hung up? Why would the story end there? The same thing basically happened in the first story, with Paxton throwing away the socks and Anderson never knowing about it.
+In manually inspecting both the dataset and the augmented examples, it&#039;s clear that GPT-4 (the model used to generate the narratives) had a tendency to dramatize things. But it&#039;s still unclear as to why these examples (along with 16 others) were useful in increasing task performance. To borrow a quote from Battle and Gollapudi, &quot;the only real trend may be no trend&quot;. Maybe counterintuitively, this is still an important result.
+Towards Better Theory of Mind Evals
+The OpenToM authors were correct in identifying common pitfalls with existing ToM tests and their contributions with the dataset are a significant step forward. However, we still believe these tests are fundamentally flawed in an AI context.
+We know that any observed &quot;reasoning&quot; in language models is due to behaviors learned in training. These tests are assessing their abilities to answer correctly in a single inference, which is both impressive and completely unrealistic. Real AI products already have access to memory, tools, multiple inferences, and more. They&#039;re going to be interacting with humans in more and more social settings, not trying to answer questions about hypothetical stories. Humans and agents are much more complex than that.
+There was a time when people were upset at the inability to interpret features learned by neural networks. People have mostly moved on from that limitation in favor of the improved performance, so maybe it&#039;s time to do the same here. It follows the design philosophy of DSPy to abstract away the need to manipulate explicit prompts and examples to improve performance on a task. The examples it settled on were learned — DSPy worked exactly how it&#039;s supposed to. Deep learning uses neurons in a network to learn latent, arbitrary features optimized against an objective. The abstraction has just moved up a layer to the space of prompts that can be used to optimize against an objective.
+Thus, the ability to achieve near gpt-4-turbo performance (and sometimes exceed it) with a &quot;less powerful&quot; language model that just learns the right examples to seed its generations is incredibly significant. If it can be done in these narrow tasks, it follows that there exists a vast space of other tasks this can be done for. Humans have nearly infinite &quot;states&quot; to make ToM predictions about, so we&#039;re going to have to be able to do this repeatedly in order to effectively learn and update our models over time.
+Major thanks go to Jacob Van Meter for his significant contributions to this project, Omar Khattab and the DSPy team, as well as the OpenToM authors for moving the ToM space forward. You can see all of our code and data here.
+This is just the beginning of our exploration into these topics. To stay up to date, sign up to receive our release notes. Or if you already know you&#039;re going to want ToM insights to personalize your AI application, join the waitlist for our private beta.

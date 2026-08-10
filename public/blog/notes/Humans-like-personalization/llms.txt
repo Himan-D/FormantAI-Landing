@@ -1,0 +1,34 @@
+# Humans like personalization
+
+The case for AI personalization--why users prefer bespoke experiences & how apps that don't personalize will lose to those that do.
+
+Date: 2024-03-26
+URL: .
+Tags: notes, philosophy
+
+---
+
+To us: it&#039;s obvious. But we get asked this a lot:
+
+Why do I need to personalize my AI application?
+
+Fair question; not everyone has gone down this conceptual rabbithole to the extent we have at Plastic and with Honcho.
+Short answer: people like it.
+In the tech bubble, it can be easy to forget about what most humans like. Isn&#039;t building stuff people love our job though?
+In web2, it&#039;s taken for granted. Recommender algorithms make UX really sticky, which retains users sufficiently long to monetize them. To make products people love and scale them, they had to consider whether billions--in aggregate--tend to prefer personalized products/experiences or not.
+In physical reality too, most of us prefer white glove professional services, bespoke products, and friends and family who know us deeply. We place a premium in terms of time and economic value on those goods and experiences.
+The more we&#039;re missing that, the more we&#039;re typically in a principal-agent problem, which creates overhead, interest misalignment, dissatisfaction, mistrust, and information asymmetry:
+
+
+
+But, right now, most AI applications are just toys and demos:
+Transclude of ARCHIVED;-Honcho;-User-Context-Management-for-LLM-Apps#^18066b
+It&#039;s also why everyone is obsessed with evals and benchmarks that have scant practical utility in terms of improving UX for the end user. If we had more examples of good products, ones people loved, killer apps, no one would care about leaderboards anymore.
+
+OK, but what about services that are purely transactional? Why would a user want that to be personalized? Why complicate it? Just give me the answer, complete the task, etc...
+
+Two answers:
+
+Every interaction has context. Like it or not, people have preferences and the more an app/agent can align with those, the more it can enhance time to value for the user. It can be stickier, more delightful, &quot;just work,&quot; and entail less overhead. (We&#039;re building more than calculators here, though this applies even to those!)
+If an app doesn&#039;t do this, it&#039;ll get out-competed by one that does...or by the ever improving set of generally capable foundation models.
+
