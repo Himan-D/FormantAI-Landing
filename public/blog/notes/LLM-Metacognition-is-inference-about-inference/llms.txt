@@ -1,0 +1,14 @@
+# LLM Metacognition is inference about inference
+
+Defining metacognition in LLMs as running inference on prior inference outputs--a critical architecture for building rich user representations.
+
+Date: 2024-03-26
+URL: .
+Tags: notes, ml
+
+---
+
+For wetware, metacognition is typically defined as ‘thinking about thinking’ or often a catch-all for any ‘higher-level’ cognition.
+(In some more specific domains, it&#039;s an introspective process, focused on thinking about exclusively your own thinking or a suite of personal learning strategies...all valid within their purview, but too constrained for our purposes.)
+In large language models, the synthetic corollary of cognition is inference. So we can reasonably define a metacognitive process in an LLM architecture as any that runs inference on the output of prior inference. That is, inference itself is used as context--inference about inference.
+It might be instantly injected into the next prompt, stored for later use, or leveraged by another model. This kind of architecture is critical when dealing with user context, since LLMs can run inference about user behavior, then use that synthetic context in the future. Experiments here will be critical to overcome the machine learning community&#039;s fixation on task completion. For us at Plastic, one of the most interesting species of metacognition is theory of mind and mimicking that in LLMs to form high-fidelity representations of users.

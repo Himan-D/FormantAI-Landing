@@ -1,0 +1,117 @@
+# Common Patterns for Building with Honcho
+
+The patterns we consistently see Honcho map to--the assistant that knows you, the tutor that tracks progress, unified personal memory, and the shared brain--and how to pick the one that fits your setup.
+
+Date: 2026-07-22
+URL: .
+Tags: blog, honcho, dev
+
+---
+
+Honcho is where context accumulates and user personalization builds. How you use Honcho differs based on:
+
+What the memory is for (sustaining a relationship, advancing a goal, total recall, or coordinating a group).
+The context sources (chat messages, Granola notes, Telegram group chats, etc.).
+
+We consistently see Honcho mapping well to the following patterns:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PatternWhat the memory is forSources feeding itWho reads itThe part to get rightAssistant that knows youSustaining a relationshipOne surfaceThe AI, to stay presentCost/latency of rich injection per turnTutor that tracks progressAdvancing a goalOne surface, over timeThe AI live, plus a human reviewing afterTurning conclusions into progress you can seeUnified personal memoryTotal recallMany sources → one peerThe user, from anywhereSession scoping across uneven sourcesShared brainCoordinating a groupMany contributorsThe groupPartitioned read-boundaries
+For more technical details the design patterns reference shows how each primitive behaves.
+The assistant that knows you
+One bond, one surface, maximum depth.
+A consumer product where an assistant or character keeps a private, persistent model of each individual user and never starts from scratch. Think of a platform where creators launch AI characters, and each character quietly builds a real relationship with every user it talks to: it remembers your name, your history, your preferences, the emotional patterns that recur across conversations, and it doesn&#039;t reset between chats. The sense that it actually knows you is the product.
+How it maps to Honcho
+
+Each user is a peer, reused across every conversation so their representation deepens instead of fragmenting.
+Each character or assistant is its own peer.
+A session is one conversation between a user and a character.
+
+Honcho models the user from their own messages, so you get a picture of who that person is that compounds every session. If a character needs its own directional read on a user--distinct from the global picture--that&#039;s what directional perspectives are for, but most products don&#039;t need that to start.
+How you read memory: pull the user&#039;s representation into context and inject it, at session start and per turn if your latency budget allows. Use the chat endpoint for on-demand &quot;what do we know about this user?&quot; The main lever you&#039;ll tune is how often you fetch--it&#039;s the difference between &quot;feels alive&quot; and &quot;costs too much per turn.&quot;
+Why this works: continuity is the product. The relationship is what users return for, and every conversation makes the next one better.
+See it built: the SillyTavern guide wires memory into AI characters, the Discord bot guide covers a chat-based companion, and the voice agent guide builds an embodied one.
+The tutor that tracks your progress
+Same shape as a companion--but the representation is pointed at a goal.
+Here the value isn&#039;t warmth or the relationship for its own sake; it&#039;s tracking how someone changes over time and acting on it. Picture a game-based learning product where students move through interactive historical simulations. A mentor agent adapts its guidance to each student, while in-character NPCs react in-world--a character in the scene won&#039;t hand you the answer the way the mentor will; not knowing it has consequences inside the story. Across many runs, the product builds up what each student has grasped and where misconceptions persist, and surfaces that to teachers.
+How it maps to Honcho
+
+Each student is a peer.
+The mentor agent and each in-character NPC are their own peers. Separate peers give each agent its own representation; what each one actually sees is set by the context you assemble per session--the mentor is allowed to explain the history, the characters are deliberately not.
+A session is one student&#039;s run through one simulation.
+Course or unit scope rides as metadata, so the mentor knows what a student should already know versus what&#039;s still ahead.
+
+How you read memory: three modes, and this pattern uses all of them. Live--pull the student&#039;s representation into the mentor&#039;s prompt during the simulation so feedback is grounded in who this learner is. Batch--query per student and aggregate into a class or course view a teacher can act on. Longitudinal--query the representation across many sessions to see change over time. This is where dreaming and conclusions carry the weight: the persistent, cross-session reasoning is what makes &quot;misconceptions that keep coming back&quot; legible.
+Why this works: the memory is instrumented toward mastery, not toward a bond. You&#039;re measuring and advancing a trajectory, and the same representation serves two different consumers--the live AI adapting mid-sim, and the human educator reviewing progress after.
+The unified personal memory
+Same subject--one person--but fed by every source they touch.
+The move here is fan-in. Instead of one surface feeding the representation, everything a person touches flows into a single peer. A power user (or a builder wiring up their own tools) points a chat companion, a coding agent, an autonomous agent, and a scheduled import of emails and notes all at one Honcho workspace, under one user peer. Nothing resets, and nothing is siloed per tool. The Unified Memory Setup guide walks through exactly this build, wiring all four sources into one workspace and user peer.
+How it maps to Honcho
+
+One workspace and one user peer, reused everywhere. That shared peer ID is the entire trick--it&#039;s what keeps the representation from splitting into user-discord, user-cursor, and so on.
+Each source scopes its own sessions to its live interaction: a channel, a repository, a task run, an import batch.
+The user peer carries the long view across all of them.
+
+How you read memory: a single natural-language query--&quot;what is this user working on, and what do they care about?&quot;--asked from any surface draws on all sources at once. A preference stated while coding is queryable from the chat companion, and vice versa, because they write to the same representation.
+Why this works: the representation becomes the union of everywhere the person shows up. The one thing to get right is session scoping: high-volume sources (a day of email, a CRM export) clear the reasoning threshold on their own, but trickle inputs should append to one ongoing per-source session rather than fragment into thin sessions that each reason with too little context. Note that unification is opt-in--the plugins default to a separate workspace per host, so you only get one brain when you deliberately share the workspace and the user peer.
+The shared brain
+Now flip the subject: many people, one pool, hard boundaries.
+A team or knowledge product where memory is collective--shared across people and agents--but has to respect boundaries between what different contexts can see. Picture a collaborative product organized around spaces: a general space, say, and a separate space for sensitive notes, where memory built up in one must never leak into the other, and where you sometimes want to deliberately grant one space read access to another. The value isn&#039;t depth on a single user; it&#039;s a shared body of context that many participants contribute to and draw from, without privacy crossing lines it shouldn&#039;t.
+How it maps to Honcho
+
+Users and agents are peers within one workspace (the tenant boundary), so they can build on each other&#039;s context.
+Threads become sessions.
+Spaces are an application-level abstraction you map onto Honcho&#039;s primitives--workspaces, sessions, and scoped queries--so that any conclusion Honcho derives inherits the space it came from, and queries can be scoped to only the spaces a given context is allowed to read.
+
+The mental model is &quot;shared by default, walled where it must be&quot;--one collective memory with scoping to control what flows where, rather than a pile of isolated stores that can never talk.
+How you read memory: scope your context and conclusion queries by space. Teams building this often treat conclusions as the highest-signal layer--pulling them directly and filtering to the space in play--rather than always routing through summarized context.
+Why this works: you get one collective memory that&#039;s access-aware. Knowledge compounds across the whole team where it should and stays sealed where it must, without maintaining a heap of disconnected silos.
+Note
+Another adjacent pattern we see is a consultancy or agency delivering custom agents to clients and winning on how personable those agents are. Rather than build a memory layer per engagement, they bring Honcho in through an integration such as Hermes, which ships with Honcho wired in. The delivered agent then maps each end-customer it talks to onto a peer and builds up a per-person representation. So it&#039;s personable on day one, the client writes no retrieval code, and there&#039;s no memory infrastructure to maintain. Use a workspace per client or engagement to keep deliveries cleanly isolated.
+How does this map to your setup?
+
+One assistant that needs to deeply know each user? The assistant pattern.
+One learner (or user) whose progress toward a goal you&#039;re tracking and acting on? The tutor pattern.
+One person, many tools, and you want it all in one place? Unified personal memory.
+Shared, multi-participant memory with privacy boundaries? The shared brain.
+Shipping agents to other people? Wrap any of the above in an integration and hand it over.
+
+Once you know your shape, the design patterns reference covers the mechanics (how peers, sessions, and scoping actually behave) and the /honcho-integration skill will wire the mapping into your codebase for you.

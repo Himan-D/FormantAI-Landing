@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>ARCHIVED: A Comprehensive Analysis of Design Patterns for REST API SDKs</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Departure Mono:wght@400;700&amp;family=Roboto Mono:ital,wght@0,400;0,600;1,400;1,600&amp;family=Ubuntu Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="🥽 Formant AI"/><meta property="og:title" content="ARCHIVED: A Comprehensive Analysis of Design Patterns for REST API SDKs"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="ARCHIVED: A Comprehensive Analysis of Design Patterns for REST API SDKs"/><meta name="twitter:description" content="A deep dive into SDK design patterns, comparing object-oriented vs singleton approaches &amp; evaluating code generation platforms for API client libraries."/><meta property="og:description" content="A deep dive into SDK design patterns, comparing object-oriented vs singleton approaches &amp; evaluating code generation platforms for API client libraries."/><meta property="og:image:alt" content="A deep dive into SDK design patterns, comparing object-oriented vs singleton approaches &amp; evaluating code generation platforms for API client libraries."/><meta property="twitter:domain" content="blog.Formant AI.com"/><meta property="og:url" content="https://blog.Formant AI.com/archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs"/><meta property="twitter:url" content="https://blog.Formant AI.com/archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs"/><link rel="icon" href="../static/icon.png"/><meta name="description" content="A deep dive into SDK design patterns, comparing object-oriented vs singleton approaches &amp; evaluating code generation platforms for API client libraries."/><meta name="generator" content="Quartz"/><link href="../index.css" rel="stylesheet" type="text/css" spa-preserve/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL29wdC9idWlsZGhvbWUvcmVwby9xdWFydHovY29tcG9uZW50cy9zdHlsZXMiLCJzb3VyY2VzIjpbIm1lcm1haWQuaW5saW5lLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTtFQUNBOztBQUdGO0VBQ0U7OztBQUtGO0VBQ0U7RUFDQTs7O0FBSUo7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBSUo7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7O0FBSUY7RUFDRTtFQUNBO0VBQ0EiLCJzb3VyY2VzQ29udGVudCI6WyIuZXhwYW5kLWJ1dHRvbiB7XG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxvYXQ6IHJpZ2h0O1xuICBwYWRkaW5nOiAwLjRyZW07XG4gIG1hcmdpbjogMC4zcmVtO1xuICByaWdodDogMDsgLy8gTk9URTogcmlnaHQgd2lsbCBiZSBzZXQgaW4gbWVybWFpZC5pbmxpbmUudHNcbiAgY29sb3I6IHZhcigtLWdyYXkpO1xuICBib3JkZXItY29sb3I6IHZhcigtLWRhcmspO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gIGJvcmRlcjogMXB4IHNvbGlkO1xuICBib3JkZXItcmFkaXVzOiA1cHg7XG4gIG9wYWNpdHk6IDA7XG4gIHRyYW5zaXRpb246IDAuMnM7XG5cbiAgJiA+IHN2ZyB7XG4gICAgZmlsbDogdmFyKC0tbGlnaHQpO1xuICAgIGZpbHRlcjogY29udHJhc3QoMC4zKTtcbiAgfVxuXG4gICY6aG92ZXIge1xuICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICBib3JkZXItY29sb3I6IHZhcigtLXNlY29uZGFyeSk7XG4gIH1cblxuICAmOmZvY3VzIHtcbiAgICBvdXRsaW5lOiAwO1xuICB9XG59XG5cbnByZSB7XG4gICY6aG92ZXIgPiAuZXhwYW5kLWJ1dHRvbiB7XG4gICAgb3BhY2l0eTogMTtcbiAgICB0cmFuc2l0aW9uOiAwLjJzO1xuICB9XG59XG5cbiNtZXJtYWlkLWNvbnRhaW5lciB7XG4gIHBvc2l0aW9uOiBmaXhlZDtcbiAgY29udGFpbjogbGF5b3V0O1xuICB6LWluZGV4OiA5OTk7XG4gIGxlZnQ6IDA7XG4gIHRvcDogMDtcbiAgd2lkdGg6IDEwMHZ3O1xuICBoZWlnaHQ6IDEwMHZoO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBkaXNwbGF5OiBub25lO1xuICBiYWNrZHJvcC1maWx0ZXI6IGJsdXIoNHB4KTtcbiAgYmFja2dyb3VuZDogcmdiYSgwLCAwLCAwLCAwLjUpO1xuXG4gICYuYWN0aXZlIHtcbiAgICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIH1cblxuICAmID4gI21lcm1haWQtc3BhY2Uge1xuICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tbGlnaHQpO1xuICAgIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgdG9wOiA1MCU7XG4gICAgbGVmdDogNTAlO1xuICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlKC01MCUsIC01MCUpO1xuICAgIGhlaWdodDogODB2aDtcbiAgICB3aWR0aDogODB2dztcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRlbnQge1xuICAgICAgcGFkZGluZzogMnJlbTtcbiAgICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICAgIHRyYW5zZm9ybS1vcmlnaW46IDAgMDtcbiAgICAgIHRyYW5zaXRpb246IHRyYW5zZm9ybSAwLjFzIGVhc2U7XG4gICAgICBvdmVyZmxvdzogdmlzaWJsZTtcbiAgICAgIG1pbi1oZWlnaHQ6IDIwMHB4O1xuICAgICAgbWluLXdpZHRoOiAyMDBweDtcblxuICAgICAgcHJlIHtcbiAgICAgICAgbWFyZ2luOiAwO1xuICAgICAgICBib3JkZXI6IG5vbmU7XG4gICAgICB9XG5cbiAgICAgIHN2ZyB7XG4gICAgICAgIG1heC13aWR0aDogbm9uZTtcbiAgICAgICAgaGVpZ2h0OiBhdXRvO1xuICAgICAgfVxuICAgIH1cblxuICAgICYgPiAubWVybWFpZC1jb250cm9scyB7XG4gICAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgICBib3R0b206IDIwcHg7XG4gICAgICByaWdodDogMjBweDtcbiAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICBnYXA6IDhweDtcbiAgICAgIHBhZGRpbmc6IDhweDtcbiAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICBib3JkZXItcmFkaXVzOiA2cHg7XG4gICAgICBib3gtc2hhZG93OiAwIDJweCA0cHggcmdiYSgwLCAwLCAwLCAwLjEpO1xuICAgICAgei1pbmRleDogMjtcblxuICAgICAgLm1lcm1haWQtY29udHJvbC1idXR0b24ge1xuICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyO1xuICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgICAgICAgd2lkdGg6IDMycHg7XG4gICAgICAgIGhlaWdodDogMzJweDtcbiAgICAgICAgcGFkZGluZzogMDtcbiAgICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgICBjb2xvcjogdmFyKC0tZGFyayk7XG4gICAgICAgIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgICAgICBmb250LXNpemU6IDE2cHg7XG4gICAgICAgIGZvbnQtZmFtaWx5OiB2YXIoLS1ib2R5Rm9udCk7XG4gICAgICAgIHRyYW5zaXRpb246IGFsbCAwLjJzIGVhc2U7XG5cbiAgICAgICAgJjpob3ZlciB7XG4gICAgICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgfVxuXG4gICAgICAgICY6YWN0aXZlIHtcbiAgICAgICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoMXB4KTtcbiAgICAgICAgfVxuXG4gICAgICAgIC8vIFN0eWxlIHRoZSByZXNldCBidXR0b24gZGlmZmVyZW50bHlcbiAgICAgICAgJjpudGgtY2hpbGQoMikge1xuICAgICAgICAgIHdpZHRoOiBhdXRvO1xuICAgICAgICAgIHBhZGRpbmc6IDAgMTJweDtcbiAgICAgICAgICBmb250LXNpemU6IDE0cHg7XG4gICAgICAgIH1cbiAgICAgIH1cbiAgICB9XG4gIH1cbn1cbiJdfQ== */</style><script src="../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://blog.Formant AI.com/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://blog.Formant AI.com/archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs-og-image.webp"/><meta property="og:image:url" content="https://blog.Formant AI.com/archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs-og-image.webp"/><meta name="twitter:image" content="https://blog.Formant AI.com/archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../blog.html">🥽 Formant AI</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>{let folderOrder=[\&quot;posts\&quot;,\&quot;notes\&quot;,\&quot;research\&quot;,\&quot;careers\&quot;,\&quot;archive\&quot;];if(a.isFolder&amp;&amp;b.isFolder){let aIndex=folderOrder.indexOf(a.displayName.toLowerCase()),bIndex=folderOrder.indexOf(b.displayName.toLowerCase());return aIndex!==-1&amp;&amp;bIndex!==-1?aIndex-bIndex:aIndex!==-1?-1:bIndex!==-1?1:a.displayName.localeCompare(b.displayName)}if(a.isFolder)return-1;if(b.isFolder)return 1;let aDate=a.data?.date?new Date(a.data.date).getTime():0;return(b.data?.date?new Date(b.data.date).getTime():0)-aDate||a.displayName.localeCompare(b.displayName)}&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-3" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../blog.html">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../archive.html">archive</a><p> ❯ </p></div><div class="breadcrumb-element"><a "https://Formant AI.com/blog/archive/href">ARCHIVED: A Comprehensive Analysis of Design Patterns for REST API SDKs</a></div></nav><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: start; justify-self: center;"><h1 class="article-title">ARCHIVED: A Comprehensive Analysis of Design Patterns for REST API SDKs</h1></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: start; justify-self: center;"><div class="copy-page-container"><button class="copy-page-button" data-slug="archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs" aria-label="Copy page as Markdown"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><span class="copy-page-text">Copy page</span><svg class="dropdown-arrow" aria-hidden="true" height="12" viewBox="0 0 12 12" version="1.1" width="12"><path d="M6 8.5L2 4.5h8L6 8.5z"></path></svg></button><div class="copy-page-dropdown"><button class="dropdown-item copy-markdown-btn" data-slug="archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"><path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path></svg><div class="dropdown-item-content"><span class="dropdown-item-title">Copy page as Markdown</span></div></button><a class="dropdown-item view-markdown-link external" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs/llms.txt" target="_blank" data-no-popover="true"><svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16"><path fill-rule="evenodd" d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75zm1.75-.25a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 00.25-.25V6h-2.75A1.75 1.75 0 019 4.25V1.5H3.75zm6.75.062V4.25c0 .138.112.25.25.25h2.688a.252.252 0 00-.011-.013l-2.914-2.914a.272.272 0 00-.013-.011z"></path></svg><div class="dropdown-item-content"><span class="dropdown-item-title">View as Markdown <span class="external-arrow">↗</span></span></div></a><a class="dropdown-item honcho-link external" data-slug="archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#" target="_blank" data-no-popover="true"><svg aria-hidden="true" fill="currentColor" height="16" width="16" viewBox="0 0 87 77"><path d="M55.29 0H38.77V6.89H55.29V0Z"></path><path d="M65.95 6.89H55.29V13.69H65.95V6.89Z"></path><path d="M72.66 13.69H65.95V20.4H72.66V13.69Z"></path><path d="M79.54 20.4H72.66V30.17H79.54V20.4Z"></path><path d="M86.33 30.16H79.54V46.54H86.33V30.16Z"></path><path d="M79.54 46.55H72.67V56.32H79.54V46.55Z"></path><path d="M72.67 56.31H65.95V63.11H72.67V56.31Z"></path><path d="M65.95 63.11H55.29V69.96H65.95V63.11Z"></path><path d="M55.29 69.96H35.84V76.65H55.29V69.96Z"></path><path d="M35.84 63.11H25.18V69.96H35.84V63.11Z"></path><path d="M25.18 56.31H18.39V63.11H25.18V56.31Z"></path><path d="M18.39 46.55H11.52V56.32H18.39V46.55Z"></path><path d="M4.87 33.97V20.4H0V40.8H4.87V46.55H11.52V33.97H4.87Z"></path><path d="M18.31 27.17H11.52V33.96H18.31V27.17Z"></path><path d="M38.77 6.89H18.39V13.69H38.77V6.89Z"></path><path d="M45.5 13.69H38.79V20.4H45.5V13.69Z"></path><path d="M18.32 27.17H38.79V20.4H18.39V13.69H4.87V20.4H18.32V27.17Z"></path><path d="M38.79 30.16H31.98V36.87H38.79V30.16Z"></path><path d="M59.09 30.16H52.28V36.87H59.09V30.16Z"></path><path d="M59.16 50.47H31.98V56.31H59.16V50.47Z"></path></svg><div class="dropdown-item-content"><span class="dropdown-item-title">Ask Honcho Chat about this page <span class="external-arrow">↗</span></span></div></a><a class="dropdown-item chatgpt-link external" data-slug="archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#" target="_blank" data-no-popover="true"><svg aria-hidden="true" fill="currentColor" height="16" width="16" viewBox="0 0 320 320"><path d="m297.06 130.97c7.26-21.79 4.76-45.66-6.85-65.48-17.46-30.4-52.56-46.04-86.84-38.68-15.25-17.18-37.16-26.95-60.13-26.81-35.04-.08-66.13 22.48-76.91 55.82-22.51 4.61-41.94 18.7-53.31 38.67-17.59 30.32-13.58 68.54 9.92 94.54-7.26 21.79-4.76 45.66 6.85 65.48 17.46 30.4 52.56 46.04 86.84 38.68 15.24 17.18 37.16 26.95 60.13 26.8 35.06.09 66.16-22.49 76.94-55.86 22.51-4.61 41.94-18.7 53.31-38.67 17.57-30.32 13.55-68.51-9.94-94.51zm-120.28 168.11c-14.03.02-27.62-4.89-38.39-13.88.49-.26 1.34-.73 1.89-1.07l63.72-36.8c3.26-1.85 5.26-5.32 5.24-9.07v-89.83l26.93 15.55c.29.14.48.42.52.74v74.39c-.04 33.08-26.83 59.9-59.91 59.97zm-128.84-55.03c-7.03-12.14-9.56-26.37-7.15-40.18.47.28 1.3.79 1.89 1.13l63.72 36.8c3.23 1.89 7.23 1.89 10.47 0l77.79-44.92v31.1c.02.32-.13.63-.38.83l-64.41 37.19c-28.69 16.52-65.33 6.7-81.92-21.95zm-16.77-139.09c7-12.16 18.05-21.46 31.21-26.29 0 .55-.03 1.52-.03 2.2v73.61c-.02 3.74 1.98 7.21 5.23 9.06l77.79 44.91-26.93 15.55c-.27.18-.61.21-.91.08l-64.42-37.22c-28.63-16.58-38.45-53.21-21.95-81.89zm221.26 51.49-77.79-44.92 26.93-15.54c.27-.18.61-.21.91-.08l64.42 37.19c28.68 16.57 38.51 53.26 21.94 81.94-7.01 12.14-18.05 21.44-31.2 26.28v-75.81c.03-3.74-1.96-7.2-5.2-9.06zm26.8-40.34c-.47-.29-1.3-.79-1.89-1.13l-63.72-36.8c-3.23-1.89-7.23-1.89-10.47 0l-77.79 44.92v-31.1c-.02-.32.13-.63.38-.83l64.41-37.16c28.69-16.55 65.37-6.7 81.91 22 6.99 12.12 9.52 26.31 7.15 40.1zm-168.51 55.43-26.94-15.55c-.29-.14-.48-.42-.52-.74v-74.39c.02-33.12 26.89-59.96 60.01-59.94 14.01 0 27.57 4.92 38.34 13.88-.49.26-1.33.73-1.89 1.07l-63.72 36.8c-3.26 1.85-5.26 5.31-5.24 9.06l-.04 89.79zm14.63-31.54 34.65-20.01 34.65 20v40.01l-34.65 20-34.65-20z"></path></svg><div class="dropdown-item-content"><span class="dropdown-item-title">Ask ChatGPT about this page <span class="external-arrow">↗</span></span></div></a><a class="dropdown-item claude-link external" data-slug="archive/ARCHIVED;-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#" target="_blank" data-no-popover="true"><svg aria-hidden="true" fill="currentColor" height="16" width="16" viewBox="0 0 24 24"><path d="M4.709 15.955l4.72-2.647.08-.23-.08-.128H9.2l-.79-.048-2.698-.073-2.339-.097-2.266-.122-.571-.121L0 11.784l.055-.352.48-.321.686.06 1.52.103 2.278.158 1.652.097 2.449.255h.389l.055-.157-.134-.098-.103-.097-2.358-1.596-2.552-1.688-1.336-.972-.724-.491-.364-.462-.158-1.008.656-.722.881.06.225.061.893.686 1.908 1.476 2.491 1.833.365.304.145-.103.019-.073-.164-.274-1.355-2.446-1.446-2.49-.644-1.032-.17-.619a2.97 2.97 0 01-.104-.729L6.283.134 6.696 0l.996.134.42.364.62 1.414 1.002 2.229 1.555 3.03.456.898.243.832.091.255h.158V9.01l.128-1.706.237-2.095.23-2.695.08-.76.376-.91.747-.492.584.28.48.685-.067.444-.286 1.851-.559 2.903-.364 1.942h.212l.243-.242.985-1.306 1.652-2.064.73-.82.85-.904.547-.431h1.033l.76 1.129-.34 1.166-1.064 1.347-.881 1.142-1.264 1.7-.79 1.36.073.11.188-.02 2.856-.606 1.543-.28 1.841-.315.833.388.091.395-.328.807-1.969.486-2.309.462-3.439.813-.042.03.049.061 1.549.146.662.036h1.622l3.02.225.79.522.474.638-.079.485-1.215.62-1.64-.389-3.829-.91-1.312-.329h-.182v.11l1.093 1.068 2.006 1.81 2.509 2.33.127.578-.322.455-.34-.049-2.205-1.657-.851-.747-1.926-1.62h-.128v.17l.444.649 2.345 3.521.122 1.08-.17.353-.608.213-.668-.122-1.374-1.925-1.415-2.167-1.143-1.943-.14.08-.674 7.254-.316.37-.729.28-.607-.461-.322-.747.322-1.476.389-1.924.315-1.53.286-1.9.17-.632-.012-.042-.14.018-1.434 1.967-2.18 2.945-1.726 1.845-.414.164-.717-.37.067-.662.401-.589 2.388-3.036 1.44-1.882.93-1.086-.006-.158h-.055L4.132 18.56l-1.13.146-.487-.456.061-.746.231-.243 1.908-1.312-.006.006z"></path></svg><div class="dropdown-item-content"><span class="dropdown-item-title">Ask Claude about this page <span class="external-arrow">↗</span></span></div></a></div></div></div></div><p show-comma="true" class="content-meta"><time datetime="2024-05-09T00:00:00.000Z">May 09, 2024</time><span>by Vineeth Voruganti</span><span>16 min read</span></p><ul class="tags"><li><a href="../tags/blog.html" class="internal tag-link">blog</a></li><li><a href="../tags/dev.html" class="internal tag-link">dev</a></li><li><a href="../tags/archive.html" class="internal tag-link">archive</a></li></ul></div></div><article class="popover-hint"><blockquote class="callout custom" data-callout="custom">
+<div class="callout-title">
+                  <div class="callout-icon"></div>
+                  <div class="callout-title-inner"><p>WELCOME TO THE Formant AI <a href="../archive.html" class="internal alias" data-slug="archive">ARCHIVE</a></p></div>
+                  
+                </div>
+<div class="callout-content">
+<p>This blog post has been archived because it's legacy content that's out-of-date or deprecated. We keep this content around so those interested can dig into the evolution of our projects &amp; thinking.</p>
+<p>This post contains Vineeth's (Formant AI's Co-founder &amp; CTO) notes on REST API SDK design patterns that informed how we built Honcho's client libraries. Some patterns described here have been superseded by our shift toward LLM-native interfaces, but the analysis of pagination, error handling, &amp; developer experience remains useful for anyone building API tooling.</p>
+<p>For the most up-to-date SDK reference, check out the <a href="https://docs.honcho.dev" class="external">Honcho Docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<p>Enjoy.</p>
+</div>
+</blockquote>
+<p><em>This post is adapted from <a href="https://vineeth.io/posts/sdk-development" class="external">vineeth.io<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></em></p>
+<h1 id="tldr">TL;DR<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#tldr" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>After several months of managing the SDKs for Honcho manually, we decided to
+take a look at the options available for automatically generating SDKs.</p>
+<p>From our research we picked a platform and have made brand-new SDKs for Honcho
+that use idiomatic code, are well documented, and let us support more languages.</p>
+<h1 id="introduction">Introduction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#introduction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>For the past few months I have been working on managing the <a href="https://honcho.dev" class="external">Honcho<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> project and its associated SDKs. We've been taking the approach of developing the SDK manually as we are focused on trying to find the best developer UX and maximize developer delight.</p>
+<p>This has led to a rather arduous effort that has required a large amount of
+refactoring as we are making new additions to the project, and the capabilities
+of the platform rapidly expand.</p>
+<p>While these efforts have been going on a new player in the SDK generation space
+dropped on <a href="https://news.ycombinator.com/item?id=40146505" class="external">hacker news<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<p>When I first started working on Honcho I did a cursory look at a number of SDK
+generators, but wasn't impressed with the results I saw. However, a lot of that
+was speculative and Honcho was not nearly as mature as it is now.</p>
+<p>So spurred by the positive comments in the thread above I've decided to do a
+more detailed look into the space and, also try to develop a better understanding
+of what approaches are generally favorable in creating API client libraries.</p>
+<h1 id="background">Background<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#background" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>For a full understanding of Honcho I recommend the great <a href="https://Formant AI.com/blog/ARCHIVED;-A-Simple-Honcho-Primer" class="internal alias" data-slug="ARCHIVED;-A-Simple-Honcho-Primer">Simple Honcho Primer</a> post, but I'll try to summarize the important details here.</p>
+<p>Honcho is a personalization platform for LLM applications. It is infrastructure
+that developers can use for storing data related to their applications, deriving
+insights about their data and users, and evaluating the performance of their
+applications. This functionality is exposed through a REST API interface with
+the following resource constructs.</p>
+<p>|____Apps<br/>
+|____|____Users<br/>
+|____|____|____Sessions<br/>
+|____|____|____|____Messages<br/>
+|____|____|____|____Metamessages<br/>
+|____|____|____Collections<br/>
+|____|____|____|____Documents</p>
+<p>So Apps have Users that have Sessions and Collections where Sessions can have
+Messages and Metamessages and Collections can have Documents.</p>
+<p>At the time of writing this post Honcho is being manually maintained with a
+singular client SDK for the Python ecosystem. The SDK is co-located in the
+<a href="https://github.com/plastic-labs/honcho/tree/main/sdk" class="external">repo<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<p>The SDK is written in an object-oriented style where the top level <code>Honcho</code>
+object will return lower level objects such as a <code>User</code> object and <code>Session</code>
+objects. These objects contain the CRUD methods necessary to use them i.e.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> honcho </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Honcho</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">honcho </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> Honcho(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Test App Name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">honcho.initialize()</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">user </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> honcho.create_user(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;username&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">session </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> user.create_session()</span></span></code></pre></figure>
+<p>There is an Async version of the SDK with an <code>AsyncHoncho</code> class that uses
+objects such as <code>AsyncSession</code> and <code>AsyncUser</code>.</p>
+<h1 id="guiding-questions">Guiding Questions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#guiding-questions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Before evaluating the below platforms I wanted to investigate a few questions I
+had about how to design SDKs and how they are generally maintained in other
+organizations. I've also included some questions I want to think about when
+looking at the different platforms</p>
+<p>I'm doing this through the lens of a Python developer as Honcho currently only
+has a Python client library with plans to quickly expand to other ecosystems.</p>
+<p>General SDK Questions</p>
+<ol>
+<li>Do developers prefer an object-oriented approach or singleton approach for
+client SDKs that wrap a REST API?</li>
+<li>What additional features are generally important in SDK design outside the
+functionality of the API (retry, pagination, etc.)?</li>
+</ol>
+<p>Platform Specific Questions</p>
+<ol>
+<li>How readable and easy to understand is the generated code?</li>
+<li>How customizable is the end result?</li>
+<li>How easy was it to use the tool?</li>
+<li>What approach does the tool take? Object-oriented or singleton?</li>
+<li>How does it handle async vs sync interfaces?</li>
+</ol>
+<h1 id="research">Research<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#research" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p>First I took a look at sources and posts online that talk in general about
+developing SDKs. This isn't an exhaustive look at every link I looked at, but
+ones I thought were relevant. The notes are messy and not necessarily fully
+formed sentences.</p>
+</blockquote>
+<p><a href="https://www.reddit.com/r/Python/comments/vty3sx/any_design_patterns_and_tips_on_writing_an_api/" class="external">Any design patterns and tips on writing an API client library<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Things they are laying out here.</p>
+<p>One person</p>
+<ul>
+<li>Auth is really hard to figure out</li>
+<li>Retry logic and pagination is really important</li>
+</ul>
+<p>Another person</p>
+<ul>
+<li>Keep data objects as just data and use other objects for transformations</li>
+</ul>
+<p>^ basically advocating for the singleton model</p>
+<p>Person 3</p>
+<ul>
+<li>Also arguing for singleton approach. Made a good case where if you really only
+care about lower level stuff it's annoying</li>
+</ul>
+<p>Firstly, don't go over the top with object-oriented modelling. If you've got an API call like:</p>
+<p><code>GET /locations/12345/customers/65432/orders/87678768</code>
+Don't implement this as:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">client.location(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">12345</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">).customer(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">65432</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">).order(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">87678768</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">).get()</span></span></code></pre></figure>
+<p>Just implement:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">client.get_order(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">12345</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">65432</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">87678768</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p>that last one is better tbh it's just managing that data isn't done within the
+object, which is my main problem.</p>
+<p>So arguments for singleton approach are</p>
+<ul>
+<li>harder to go to lower levels from the start</li>
+</ul>
+<p>The object-oriented approach looks more readable.</p>
+<p><a href="https://bhomnick.net/design-pattern-python-api-client/" class="external">A Design Pattern for Python API Client Libraries<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>It mainly covers how to build a singleton library but has this one snippet at
+the end.</p>
+<blockquote>
+<p>Other types of APIs
+This pattern works well for RPC-style APIs, but tends to break down for more
+object-based or RESTful APIs as having a single interface class gets messy
+quickly. In those cases I find it makes more sense to break the interface down
+to resource-level, modeling things more like an ORM. I'll cover that in a later
+post, next time I find the need to build one.</p>
+</blockquote>
+<p>At the time of this research there was no follow-up post.</p>
+<p><a href="https://news.ycombinator.com/item?id=23283551" class="external">Ask HN: Best practices (and examples) for designing client libraries for APIs?<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>The first comment actually advocates for an object-oriented model but just using
+the top level client object for authentication and setup stuff.</p>
+<p>Most of the sentiments kind of make me think using an object-oriented model
+might make more sense.</p>
+<p><a href="https://dl.acm.org/doi/abs/10.1145/1176617.1176622" class="external">How to design a good API and why it matters<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Nothing really to note from there. It's more about the API itself and not the
+SDK.</p>
+<p><a href="https://medium.com/rubyinside/building-a-creative-fun-api-client-in-ruby-a-builder-pattern-variation-f50613abd4c3" class="external">Building A Creative &amp; Fun API Client In Ruby: A Builder Pattern Variation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>This is basically a guy who saw a singleton approach and said I want an object
+oriented approach.</p>
+<p><a href="https://kevin.burke.dev/kevin/client-library-design/" class="external">How to design your API SDK<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>A developer from twilio talking about their approach to creating helper
+libraries and client libraries.</p>
+<p>A point he makes is that &quot;If you've designed your API in a RESTful way, your API
+endpoints should map to objects in your system&quot;</p>
+<p>This point isn't explicitly asking for the object-oriented approach as the
+singleton approach just moves the verbs to the singleton, but usually still has
+data only objects for the different resources.</p>
+<p>I say this, but the examples seem to use an object-oriented model.</p>
+<p><a href="https://blog.liblab.com/how-to-build-an-sdk/" class="external">How to build an SDK from scratch: Tutorial &amp; best practices<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Written by one of the SDK generation platforms.</p>
+<p>It talks in general terms about creating data objects and mapping methods to
+endpoints. One of the points it suggests as a good grouping method is to group
+functions in service classes, essentially advocating for an object-oriented
+model.</p>
+<p><a href="https://benhoyt.com/writings/python-api-design/" class="external">Designing Pythonic library APIs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>The two takeaways that are the most important to me when looking at these are</p>
+<ul>
+<li>Design your library to be used as import lib ... lib.Thing() rather than from lib import LibThing ... LibThing().</li>
+<li>Avoid global state; use a class instead</li>
+</ul>
+<p>From that it seems using a singleton for the actions/verbs and then storing data
+in dataclasses would support both of the requirements. The examples in the post
+show a class that has functionality.</p>
+<p>Using tree-shaking style imports should also allow for lower scopes. For example
+when only worrying about messages for a particular session in honcho a user
+could import just the messages namespace i.e.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">from</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> honcho.apps.users.sessions </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> messages</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">messages.create(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;sample&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p>so there are pythonic ways to make the code less verbose. However the benefit of
+having the entire string is making it clearer what messages are being discussed.
+Are these Honcho messages? LangChain messages? It can get messy that way
+especially in the LLM space where many libraries and components are
+converging on similar naming schemes.</p>
+<p><a href="https://wwt.github.io/building-a-python-sdk/" class="external">Build a Python SDK<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Looks like a guide made by Cisco. I paid special attention to the &quot;API Wrapper
+Module&quot; section. It was a really barebones example in this guide that just
+implemented a very small client and put most of the attention on how to manage
+the connection logic.</p>
+<p>It used one singleton object that had all the methods available for the API.
+There was no concept of resources or data objects here as no data was being
+persistently stored.</p>
+<p><a href="https://medium.com/arthur-engineering/best-practices-for-creating-a-user-friendly-python-sdk-e6574745472a" class="external">How to build a user-friendly Python SDK<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Noticing the trend of abstracting all connection logic for http requests to a
+separate module and having reusable methods for different http functions.</p>
+<p>Main focus of the post was just on good practices of documentation, testing, and
+logical organization.</p>
+<p><a href="https://sdks.io/docs/introduction/" class="external">SDKs.io<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>A more comprehensive repository of thoughts and principles around SDK design.
+Made by APIMATIC. which seems to be another player in the code generation space.</p>
+<p>I paid special attention to the <strong>Build</strong> section under <strong>Best Practices</strong>, and
+specifically the endpoints to methods and the models &amp; serialization.</p>
+<p>They state putting all methods in a single class (singleton) has the advantage
+of reducing the need to initialize classes, but can make the class size very
+large if there are many endpoints.</p>
+<p>Grouping methods into different namespaces could probably remove this problem
+too. A nested singleton can reduce the confusion, while still not needing to
+mess with classes and objects.</p>
+<p>It generally seems popular to at the very least create types and data objects
+for handling and storing API responses. They help with readability, type hints,
+data validations, etc. Regardless of the singleton or object-oriented approach
+data objects are something that should probably still be included.</p>
+<p><a href="https://medium.com/codex/generating-sdks-for-your-api-deb79ea630da" class="external">Generating SDKs for your API<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Advocates for using generators for making SDKs and talks about how different
+languages have different idioms and conventions that will be hard to manage.</p>
+<p>Also mentions having the generator create data models.</p>
+<p><a href="https://auth0.com/blog/guiding-principles-for-building-sdks/" class="external">Guiding Principles for Building SDKs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Some key insights</p>
+<ul>
+<li>Make sure documentation is very comprehensive</li>
+<li>Try to minimize external dependencies</li>
+<li>Have modular design patterns that make it easy to extend and pick and choose
+features.</li>
+</ul>
+<p><a href="https://www.reddit.com/r/flask/comments/1755ob0/should_i_implement_oop_in_a_rest_api/" class="external">Should I implement OOP in a REST API?<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>Most people seem to be saying a full OOP method is overkill, but there are
+people advocating for having a controller class with methods that take data
+objects as inputs. Essentially advocating for the singleton approach with data
+only objects.</p>
+<h2 id="analysis">Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Many of the generic concerns of SDK design do not have to do with the UX of the
+SDK for the end developer, rather background processes that an SDK handle. This
+includes:</p>
+<ul>
+<li>Authentication</li>
+<li>Retry Logic</li>
+<li>Pagination</li>
+<li>Logging</li>
+</ul>
+<p>When it comes to the actual developer experience and interfaces for interacting
+with the SDK the community seems a bit split. This is very much because of the
+boring fact that REST APIs are designed very differently and so it depends on
+the specifics of the API.</p>
+<p>Some APIs have many resources with basic CRUD operations. Others have many
+different endpoints, but only have a few resources. The singleton architecture
+vs a strict object-oriented approach again seems to depend a lot. Some sources
+advocate for a strict object-oriented approach where classes have their own
+methods, while others advocate for a singleton approach stating objects are
+overkill.</p>
+<p>However, the singleton approach doesn't completely abandon the idea of objects
+and almost always advocates for data objects, or some kind of models that can be
+used for type hints and validation.</p>
+<p>There is some tradeoff regardless with problems arising at different levels of
+scale. The singleton approach could be verbose and cumbersome at smaller scales,
+but the object-oriented approach may not be readable, and it could be unclear
+what methods are doing in complex codebases. Even GPT-4 couldn't decide between
+the two.</p>
+<p><img src="../assets/sdk-gpt-4.png" alt="Asking GPT-4 about Singleton vs Object-Oriented Approaches"/></p>
+<p>Again and again, the best way to approach SDK development is to just do whatever
+is easier, and create tons of documentation that will help developers navigate
+your <a href="https://blog.sbensu.com/posts/apis-as-ladders/" class="external">API Ladder<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>. Someone will get confused regardless of what you do, so the key is to make sure the SDK makes sense (even if it's not the most efficient or clean) and remove hurdles for users to navigate errors and mistakes.</p>
+<h1 id="sdk-generation-platforms">SDK Generation Platforms<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#sdk-generation-platforms" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>With a sense of the best standards for SDK design and additional features that
+should be supported in the SDK I want to look at a few different options to
+determine what is the best solution to go with.</p>
+<p>Below is a list of the different platforms I wanted to review</p>
+<ul>
+<li><a href="https://www.stainlessapi.com/" class="external">Stainless<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://speakeasyapi.dev" class="external">Speakeasy<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://liblab.com/" class="external">liblab<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://openapi-generator.tech/" class="external">OpenAPI-Generator<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p>I was using the OpenAPI Spec for Honcho that was housed at
+<a href="https://demo.honcho.dev/openapi.json" class="external">https://demo.honcho.dev/openapi.json<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p>
+<h2 id="stainless">Stainless<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#stainless" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Since the hacker news thread for the release of stainless is what spurred this
+research I decided to try them out first.</p>
+<p>From their web portal they were able to take a link to the OpenAPI spec and
+generate a NodeJS and Python SDK immediately. There was no tweaking or anything
+necessary.</p>
+<p>I mainly paid attention to the Python SDK. The code was very readable and made
+sense. I also liked how it used <code>httpx</code> and <code>pydantic</code> by default and made an
+<code>async</code> version of the interface. They took the singleton approach to the design
+of the interface. There was also built-in capabilities for retries, pagination,
+and auth.</p>
+<p>There's also capability for adding custom code such as utility functions.</p>
+<h2 id="speakeasy">Speakeasy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#speakeasy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Speakeasy required me to do everything locally through their <code>brew</code> package. It
+did not immediately accept the OpenAPI Spec and required me to make some tweaks.
+These were low-hanging fruit, and their cli has a handy AI tool that will
+diagnose the issue and tell you what to fix.</p>
+<p>I just had to add a list of servers and deduplicate some routes. I'm happy it
+found these errors, but there was some friction for me to get started. Stainless
+just worked out of the box and made some logical assumptions.</p>
+<p>The generated SDK didn't feel as strong as the stainless one. It didn't seem
+to support <code>async</code> methods, it did not use <code>pydantic</code> and used the built-in
+Python <code>@dataclass</code>. The methods had really unwieldy names, and looked like it
+would need a lot of tweaking to get it more production ready.</p>
+<h2 id="liblab">Liblab<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#liblab" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Also had me do the generation from the cli using their npm package. It was
+pretty straightforward to login and give it an API spec. Liblab seems to require
+a lot tweaking to get better results. It gave me several warnings asking me to
+add tags to my API Spec. I did not add them and went ahead to look at the
+generation.</p>
+<blockquote>
+<p>I'm not opposed to adding the tags if necessary, but I was able to get good
+results without adding them on other platforms.</p>
+</blockquote>
+<p>The results were also lack luster. The SDK took the singleton approach as well,
+which seems to be the industry standard for codegen tools. The method names
+were also unwieldy. It also didn't make use of pydantic and instead implemented
+its own <code>BaseModel</code> class. It was built on the <code>requests</code> model and doesn't seem
+to support <code>async</code> methods.</p>
+<h2 id="openapi-generator">OpenAPI Generator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#openapi-generator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This is the only one on the list that is not expressly backed by a company
+whose main goal is SDK generation. It is however a very popular project with
+many sponsors.</p>
+<p>Again, I tried to generate a client from the cli using their npm package. I used
+version <code>7.5.0</code> and once again gave it my API Spec. It gave a few warnings about
+OpenAPI Spec v3.1 not being fully supported yet, but generated a package either
+way.</p>
+<p>I again was not too impressed with the results, however I did like it more than
+liblab. The method names were also unwieldy, and the project relies on <code>urllib3</code>.
+I did not see an indication of support for an <code>async</code> client.</p>
+<p>The repo did use <code>pydantic</code> for typing and data classes, which is a plus.
+Once again, the sdk uses the <code>singleton</code> approach.</p>
+<p>I also did not see any indication of functionality for retry logic,
+authentication, or pagination.</p>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Overall, Stainless had the results that I liked the most. With almost no work
+from me, it produced a high quality SDK that designed things in a sensible way
+with many built-in features such as retries, pagination, and auth.</p>
+<p>All the platforms took the singleton approach with a host of data models so
+there isn't much to compare in that regard.</p>
+<p>The other platforms did not produce anything unusable, but they seemed to use
+less modern features and require a lot more massaging to get a desirable result.</p>
+<p>The docs for stainless also looked more clear, and it seems easier to add
+customizations after the fact.</p>
+<p>I will give Speakeasy some kudos for having documentation for different API
+frameworks. The FastAPI one made it easy to figure out what I needed to tweak
+and how to do it. The AI debugging feature was also a nice help.</p>
+<p>What I'm looking for right now is the platform or tool that can reduce my work
+the most and let me focus on other things and stainless achieved that. The
+results are not perfect, but it doesn't look like it'll need more than some
+slight tweaking and testing to get to a state I want.</p>
+<h1 id="results">Results<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#results" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>After reaching the conclusion in the previous section, I took some time to fully
+implement Stainless to make SDKs for Honcho and am proud to announce the release
+of a new Python SDK, and the launch of a brand-new NodeJS SDK.</p>
+<p>Both of these SDKs will be in separate open source repositories.</p>
+<ul>
+<li><a href="https://github.com/plastic-labs/honcho-python" class="external">Honcho Python SDK<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://github.com/plastic-labs/honcho-node" class="external">Honcho TypeScript SDK<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<p>Honcho will soon be available for a wide range of ecosystems and platforms,
+making it even easier and more accessible to make personalized agents.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-0" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#tldr" data-for="tldr">TL;DR</a></li><li class="depth-0"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#introduction" data-for="introduction">Introduction</a></li><li class="depth-0"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#background" data-for="background">Background</a></li><li class="depth-0"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#guiding-questions" data-for="guiding-questions">Guiding Questions</a></li><li class="depth-0"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#research" data-for="research">Research</a></li><li class="depth-1"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#analysis" data-for="analysis">Analysis</a></li><li class="depth-0"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#sdk-generation-platforms" data-for="sdk-generation-platforms">SDK Generation Platforms</a></li><li class="depth-1"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#stainless" data-for="stainless">Stainless</a></li><li class="depth-1"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#speakeasy" data-for="speakeasy">Speakeasy</a></li><li class="depth-1"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#liblab" data-for="liblab">Liblab</a></li><li class="depth-1"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#openapi-generator" data-for="openapi-generator">OpenAPI Generator</a></li><li class="depth-1"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#conclusion" data-for="conclusion">Conclusion</a></li><li class="depth-0"><a href="ARCHIVED%3B-A-Comprehensive-Analysis-of-Design-Patterns-for-REST-API-SDKs.html#results" data-for="results">Results</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/plastic-labs/blog">GitHub</a></li><li><a href="https://discord.gg/Formant AI">Discord Community</a></li><li><a href="../../index.html">Formant AI.com</a></li></ul></footer></div></div></body><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="../postscript.js" type="module"></script></html>

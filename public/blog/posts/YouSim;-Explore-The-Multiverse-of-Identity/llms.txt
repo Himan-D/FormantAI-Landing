@@ -1,0 +1,44 @@
+# YouSim: Explore the Multiverse of Identity
+
+YouSim is a CLI game that lets you simulate any identity--real, fictional, or alien—exploring the vast multiverse of personalities within LLM latent space.
+
+Date: 2024-06-17
+URL: .
+Tags: demos, honcho, philosophy, ml, research, releases, cogsci, yousim
+
+---
+
+
+TL;DR
+YouSim is a fun demo to explore the multiverse of identities, to glimpse a (mere infinite) sliver of the (transfinite) diversity within the latent space. Inspired by WorldSim, WebSim, &amp; Infinite Backrooms, YouSim leverages Claude to let you locate, modify, &amp; interact with any entity you can imagine. It&#039;s a game that can simulate anyone you like.
+Who will you summon?
+Simulators
+Large language models are simulators.
+And Plastic&#039;s core mission is to enable AI that can simulate you, can model and align to you, and therefore be trusted to act autonomously on your behalf. We&#039;re starting that journey by building Honcho--self-improving user memory for AI apps. It personalizes their UX and reduces user and developer overhead across the board. 
+All this is possible because the LLM training corpus is packed with humans thinking about other humans. It holds close to everything we collectively know about human identity. Not only that, but all our other language and concepts and their possible combinations and permutations.
+This is a big set of possibilities, much larger than the number of atoms in the universe.
+That&#039;s why it&#039;s our thesis this vast latent space contains all possible identities. I.e. it&#039;s capable of simulating any entity with higher fidelity than anyone is currently attempting.
+Honcho is a product that simulates you on the architecture of AI applications to deliver remarkably personalized UX.
+YouSim is a fun, open-ended demo that illustrates the enormous reservoir of possible identities there are to simulate within a language model.
+
+YouSim
+^e06c11
+Recently we&#039;ve seen a revival of interest LLMs themselves--their minds, behaviors, identity, and potential as simulators. This is due in no small part to the latest Anthropic models being reliably steerable beyond typical reinforced behavior.
+Infinite Backrooms lets Claude interrogate itself endlessly, WorldSim lets users simulate infinite universes, WebSim is a portal to all possible webpages.
+YouSim lets you simulate any identity.
+It&#039;s a game that lets you locate an historical figure, a fictional character, someone famous, someone you know, yourself, your friends, or completely novel alien identities waiting to be discovered.
+
+YouSim&#039;s interface is a command line simulation. You control it by entering commands like you might in a terminal. The space of possible commands is infinite and flexible--limited only by your imagination--so go wild.
+Those commands act as prompts for the simulator: &quot;Simulator Claude.&quot; Telling it how to find, alter, direct, etc the person you&#039;re simulating. If you don&#039;t know what to do, just hit return, and &quot;Searcher Claude&quot; will step in to guide the current sim. Or use the /help command for some generative inspiration.
+To begin, enter any name (e.g. Socrates, Zaphod, the xenomorph). Then the /locate command will run automatically, and after that you&#039;re ready to steer. If the sim isn&#039;t going the way you want, just alter it! Hard refresh if you hit a bug.
+Join us in Discord to swap sims, screenshots, &amp; ASCII art.
+Enjoy surfing the multiverse of identities...
+
+(Sign-up for updates here)
+Honcho
+If LLMs can simulate infinite identities, then they&#039;re uniquely suited to simulate you. You in any moment, setting, frame of mind contained in the complexity that is your ever-changing identity.  
+If you&#039;re building an AI app, that&#039;s the level of personalization now possible. But you&#039;ve got your vertical-specific tasks to focus on, going down this clearly wacky identity rabbit hole would be redundant and inefficient.
+Join &gt;100 projects already on the private beta waitlist for Honcho&#039;s self-improving user memory.
+
+
+(And if you want to work full time on the bleeding edge of human &amp; machine cognition, get in touch...)
